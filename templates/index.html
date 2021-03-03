@@ -2,7 +2,12 @@
 {% if user.is_authenticated %}
 <h3>Hello, {{ user.username }}!</h3>
 <a href='/accounts/logout'><button>Log Out</button></a>
+<a href='/tweet/'><button>New Tweet</button></a>
 {% else %}
 <h3>Hello, stranger!</h3>
 <a href='/accounts/login'><button>Log In</button></a>
 {% endif %}
+{% for tweet in tweets %}
+<h2>{{ tweet.author }}</h2>
+<p>{{ tweet.text }}</p>
+{% endfor %}
