@@ -1,3 +1,31 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import TwitterUser
+from tweet.models import Tweet
 
 # Create your views here.
+
+
+def user_detail_view(request, username):
+    user = TwitterUser.objects.get(username=username)
+    tweets = Tweet.objects.filter(author=user)
+    return render(
+        request,
+        'user_detail.html',
+        {'currentuser': user, 'tweets': tweets}
+    )
+
+
+def follow_user(request, username):
+    currentuser = TwitterUser.objects.get(username=request.user.username)
+    user = TwitterUser.objects.get(username=username)
+    currentuser.following.add(user)
+    currentuser.save()
+    return redirect(f'/users/{user.username}')
+
+
+def unfollow_user(request, username):
+    currentuser = TwitterUser.objects.get(username=request.user.username)
+    user = TwitterUser.objects.get(username=username)
+    currentuser.following.remove(user)
+    currentuser.save()
+    return redirect(f'/users/{user.username}')

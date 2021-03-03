@@ -24,3 +24,19 @@ def tweet_view(request):
             )
             return redirect('/')
     return render(request, 'generic_form.html', {'form': form})
+
+
+@login_required
+def like_tweet(request, tweet_id):
+    tweet = Tweet.objects.get(id=tweet_id)
+    tweet.likes.add(request.user)
+    tweet.save()
+    return redirect('/')
+
+
+@login_required
+def unlike_tweet(request, tweet_id):
+    tweet = Tweet.objects.get(id=tweet_id)
+    tweet.likes.remove(request.user)
+    tweet.save()
+    return redirect('/')

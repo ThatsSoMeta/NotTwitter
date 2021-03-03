@@ -1,12 +1,18 @@
-<h1>Not twitter.</h1>
-{% if user.is_authenticated %}
-<h3>Hello, {{ user.username }}!</h3>
-<a href='/accounts/logout'><button>Log Out</button></a>
-<a href='/tweet/'><button>New Tweet</button></a>
+<h1>@{{ currentuser.username }}</h1>
+{% if currentuser == user %}
+<p>This is you.</p>
+{% elif currentuser in user.following.all %}
+<a href='/users/unfollow/{{currentuser.username}}/'><button>Unfollow</button></a>
 {% else %}
-<h3>Hello, stranger!</h3>
-<a href='/accounts/login'><button>Log In</button></a>
+<a href='/users/follow/{{currentuser.username}}/'><button>Follow User</button></a>
 {% endif %}
+<a href='/'>< Back to home</a>
+
+<h3>{{currensuser.username}} is following these people:</h3>
+{% for person in currentuser.following.all %}
+<p>{{person.username}}</p>
+{% endfor %}
+
 {% for tweet in tweets %}
 <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>
     <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a></h3>
