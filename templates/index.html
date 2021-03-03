@@ -1,0 +1,8 @@
+<h1>Not twitter.</h1>
+{% if user.is_authenticated %}
+<h3>Hello, {{ user.username }}!</h3>
+<a href='/accounts/logout'><button>Log Out</button></a>
+{% else %}
+<h3>Hello, stranger!</h3>
+<a href='/accounts/login'><button>Log In</button></a>
+{% endif %}
