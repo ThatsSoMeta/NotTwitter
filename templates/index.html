@@ -1,4 +1,4 @@
-<h1>Not twitter.</h1>
+<h1>Not Twitter.</h1>
 {% if user.is_authenticated %}
 <h3>Hello, {{ user.username }}!</h3>
 <a href='/accounts/logout'><button>Log Out</button></a>
@@ -6,6 +6,9 @@
 {% else %}
 <h3>Hello, stranger!</h3>
 <a href='/accounts/login'><button>Log In</button></a>
+{% endif %}
+{% if tweets.count == 0 %}
+<h3>There are no tweets yet. Be the first!</h3>
 {% endif %}
 {% for tweet in tweets %}
 <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>

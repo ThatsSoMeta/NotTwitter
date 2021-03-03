@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import TwitterUser
 from tweet.models import Tweet
 
@@ -15,6 +16,7 @@ def user_detail_view(request, username):
     )
 
 
+@login_required
 def follow_user(request, username):
     currentuser = TwitterUser.objects.get(username=request.user.username)
     user = TwitterUser.objects.get(username=username)
@@ -23,6 +25,7 @@ def follow_user(request, username):
     return redirect(f'/users/{user.username}')
 
 
+@login_required
 def unfollow_user(request, username):
     currentuser = TwitterUser.objects.get(username=request.user.username)
     user = TwitterUser.objects.get(username=username)

@@ -6,12 +6,17 @@
 {% else %}
 <a href='/users/follow/{{currentuser.username}}/'><button>Follow User</button></a>
 {% endif %}
-<a href='/'>< Back to home</a>
-
-<h3>{{currensuser.username}} is following these people:</h3>
+<a href='/'><button>< Back to home</button></a>
+{% if currentuser.following.all.count > 0 %}
+<h3>@{{currentuser.username}} is following these people:</h3>
 {% for person in currentuser.following.all %}
 <p>{{person.username}}</p>
 {% endfor %}
+{% endif %}
+
+{% if tweets.count == 0 %}
+<h3>This user has no tweets.</h3>
+{% endif %}
 
 {% for tweet in tweets %}
 <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>
