@@ -9,10 +9,11 @@ from tweet.models import Tweet
 def user_detail_view(request, username):
     user = TwitterUser.objects.get(username=username)
     tweets = Tweet.objects.filter(author=user)
+    followers = TwitterUser.objects.filter(following=user)
     return render(
         request,
         'user_detail.html',
-        {'currentuser': user, 'tweets': tweets}
+        {'currentuser': user, 'tweets': tweets, 'followers': followers}
     )
 
 

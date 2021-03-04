@@ -1,15 +1,18 @@
 <h1>Not Twitter.</h1>
 {% if user.is_authenticated %}
-<h3>Hello, {{ user.username }}!</h3>
+<h3>Hello, @{{ user.username }}!</h3>
 <a href='/accounts/logout'><button>Log Out</button></a>
 <a href='/tweet/'><button>New Tweet</button></a>
+<a href='/notifications/'>Notifications</a>
 {% else %}
 <h3>Hello, stranger!</h3>
 <a href='/accounts/login'><button>Log In</button></a>
 {% endif %}
 {% if tweets.count == 0 %}
 <h3>There are no tweets yet. Be the first!</h3>
-{% endif %}
+{% else %}
+{% load tz %}
+{% localtime on %}
 {% for tweet in tweets %}
 <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>
     <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a></h3>
@@ -22,3 +25,5 @@
     {% endif %}
 </div>
 {% endfor %}
+{% endlocaltime %}
+{% endif %}

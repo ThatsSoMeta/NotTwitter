@@ -1,0 +1,18 @@
+<h1>Not Twitter.</h1>
+<h3>@{{ user.username }}</h3>
+<a href='/'><button>< Back to Home</button></a>
+{% comment %} <h4>Notifications:</h4> {% endcomment %}
+{% for notification in notifications %}
+<div classname='notification' style='border: 1px solid black; padding: 0 10px 10px 10px; margin: 10px'>
+{% if notification.typeof == 'mention' %}
+<h4><a href='/users/{{ notification.sender.username }}'>@{{ notification.sender }}</a> mentioned you in a tweet:</h4>
+<p>{{ notification.reference.text }}</p>
+{% if notification.read %}
+<p>Status: Read</p>
+{% else %}
+<p>Status: New</p>
+<a href='read/{{notification.id}}/'><button>Mark as Read</button></a>
+{% endif %}
+{% endif %}
+</div>
+{% endfor %}

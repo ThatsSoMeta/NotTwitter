@@ -1,4 +1,6 @@
-<h1>@{{ currentuser.username }}</h1>
+<h1>Not Twitter.</h1>
+<h2>@{{ currentuser.username }}</h2>
+<h4>{{ followers.count }} followers - {{ currentuser.following.count }} following</h4>
 {% if currentuser == user %}
 <p>This is you.</p>
 {% elif currentuser in user.following.all %}
@@ -7,17 +9,9 @@
 <a href='/users/follow/{{currentuser.username}}/'><button>Follow User</button></a>
 {% endif %}
 <a href='/'><button>< Back to home</button></a>
-{% if currentuser.following.all.count > 0 %}
-<h3>@{{currentuser.username}} is following these people:</h3>
-{% for person in currentuser.following.all %}
-<p>{{person.username}}</p>
-{% endfor %}
-{% endif %}
-
 {% if tweets.count == 0 %}
 <h3>This user has no tweets.</h3>
 {% endif %}
-
 {% for tweet in tweets %}
 <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>
     <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a></h3>
