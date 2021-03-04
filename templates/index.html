@@ -1,29 +1,16 @@
-<h1>Not Twitter.</h1>
 {% if user.is_authenticated %}
-<h3>Hello, @{{ user.username }}!</h3>
+<h2>Hello, {{ user.username }}!</h2>
+{% if request.path != '/' %}
+<a href='/'><button>Back to Home</button></a>
+{% endif %}
 <a href='/accounts/logout'><button>Log Out</button></a>
 <a href='/tweet/'><button>New Tweet</button></a>
-<a href='/notifications/'>Notifications</a>
+{% if 'notifications' not in request.path %}
+<a href='/notifications/'><button>Notifications: {{notifications}}</button></a>
+{% endif %}
 {% else %}
-<h3>Hello, stranger!</h3>
+<h1>Not Twitter.</h1>
 <a href='/accounts/login'><button>Log In</button></a>
 {% endif %}
-{% if tweets.count == 0 %}
-<h3>There are no tweets yet. Be the first!</h3>
-{% else %}
-{% load tz %}
-{% localtime on %}
-{% for tweet in tweets %}
-<div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>
-    <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a></h3>
-    <h2>{{ tweet.text }}</h2>
-    <p>{{ tweet.created_at }}</p>
-    {% if user not in tweet.likes.all %}
-    <a href='/tweet/like/{{ tweet.id }}/'><button>Like! {{ tweet.likes.count }}</button></a>
-    {% else %}
-    <a href='/tweet/unlike/{{ tweet.id }}/'><button>Unlike! {{ tweet.likes.count }}</button></a>
-    {% endif %}
-</div>
-{% endfor %}
-{% endlocaltime %}
-{% endif %}
+{% block content %}
+{% endblock %}

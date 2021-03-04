@@ -8,7 +8,7 @@ from tweet.models import Tweet
 
 def user_detail_view(request, username):
     user = TwitterUser.objects.get(username=username)
-    tweets = Tweet.objects.filter(author=user)
+    tweets = Tweet.objects.filter(author=user).order_by('-id')
     followers = TwitterUser.objects.filter(following=user)
     return render(
         request,

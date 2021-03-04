@@ -1,5 +1,6 @@
-<h1>Not Twitter.</h1>
-<h2>@{{ currentuser.username }}</h2>
+{% extends './index.html' %}
+{% block content %}
+<h1>@{{ currentuser.username }}'s Profile:</h1>
 <h4>{{ followers.count }} followers - {{ currentuser.following.count }} following</h4>
 {% if currentuser == user %}
 <p>This is you.</p>
@@ -8,14 +9,13 @@
 {% else %}
 <a href='/users/follow/{{currentuser.username}}/'><button>Follow User</button></a>
 {% endif %}
-<a href='/'><button>< Back to home</button></a>
 {% if tweets.count == 0 %}
 <h3>This user has no tweets.</h3>
 {% endif %}
 {% for tweet in tweets %}
 <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>
     <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a></h3>
-    <h2>{{ tweet.text }}</h2>
+    <a href='/tweet/{{tweet.id}}/'><h2>{{ tweet.text }}</h2></a>
     <p>{{ tweet.created_at }}</p>
     {% if user not in tweet.likes.all %}
     <a href='/tweet/like/{{ tweet.id }}/'><button>Like! {{ tweet.likes.count }}</button></a>
@@ -24,3 +24,4 @@
     {% endif %}
 </div>
 {% endfor %}
+{% endblock %}

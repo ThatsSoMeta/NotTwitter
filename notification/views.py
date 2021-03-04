@@ -7,11 +7,12 @@ from .models import Notification
 
 @login_required
 def notification_view(request):
-    notifications = Notification.objects.filter(recipient=request.user)
+    read = Notification.objects.filter(recipient=request.user, read=True).order_by('-id')
+    unread = Notification.objects.filter(recipient=request.user, read=False).order_by('-id')
     return render(
         request,
         'notifications.html',
-        {'notifications': notifications}
+        {'unread': unread, 'read': read}
     )
 
 
