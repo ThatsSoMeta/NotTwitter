@@ -15,7 +15,7 @@ def homepage_view(request):
     following = request.user.following.all()
     tweets = Tweet.objects.filter(
         Q(author__in=following) | Q(author=request.user)
-    ).order_by('-id')
+    ).order_by('-created_at')
     notifications = Notification.objects.filter(
         recipient=request.user, read=False
     ).count
@@ -112,9 +112,11 @@ def tweet_detail_view(request, id):
                     print(notice)
         form = TweetForm({'text': f'@{tweet.author} '})
         return redirect(reverse('tweet', args=[tweet.id]))
-    notifications = Notification.objects.filter(
-        recipient=request.user, read=False
-    ).count
+    notifications = 0
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(
+            recipient=request.user, read=False
+        ).count
     if tweet.replying_to:
         return redirect(reverse('tweet', args=[tweet.replying_to.id]))
     return render(
