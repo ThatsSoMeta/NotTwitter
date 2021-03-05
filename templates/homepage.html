@@ -9,13 +9,13 @@
 <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 0 20px'>
     <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a> says:</h3>
     <a href='/tweet/{{tweet.id}}/'><h2>{{ tweet.text }}</h2></a>
-    <p>
+    <p style='margin: 15px 0;'>
     {% if user not in tweet.likes.all %}
     <a href='/tweet/like/{{ tweet.id }}/'><button>Like! {{ tweet.likes.count }}</button></a>
     {% else %}
     <a href='/tweet/unlike/{{ tweet.id }}/'><button>Unlike {{ tweet.likes.count }}</button></a>
     {% endif %}
-    <a href='tweet/{{tweet.id}}/'><button>Reply ({{ tweet.replies.count }})</button></a>
+    <a href='tweet/{{tweet.id}}/'><button>Reply {{ tweet.replies.count }}</button></a>
     <span>{{tweet.created_at }}</span>
     </p>
 </div>

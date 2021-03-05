@@ -6,10 +6,10 @@
 <a href='/users/{{user.username}}/'><button>View Profile</button></a>
 <a href='/tweet/'><button>New Tweet</button></a>
 <a href='/users/all/'><button>View Users</button></a>
-<a href='/accounts/logout'><button>Log Out</button></a>
 {% if 'notifications' not in request.path %}
 <a href='/notifications/'><button>Notifications: {{notifications}}</button></a>
 {% endif %}
+<a href='/accounts/logout'><button>Log Out</button></a>
 {% else %}
 <h1>Not Twitter.</h1>
 <a href='/accounts/login'><button>Log In</button></a>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import TwitterUser
+from notification.models import Notification
 from tweet.models import Tweet
 
 # Create your views here.
@@ -10,10 +11,17 @@ from tweet.models import Tweet
 def user_detail_view(request, username):
     user = TwitterUser.objects.get(username=username)
     tweets = Tweet.objects.filter(author=user).order_by('-id')
+    notifications = Notification.objects.filter(
+        recipient=request.user, read=False
+    ).count
     return render(
         request,
         'user_detail.html',
-        {'currentuser': user, 'tweets': tweets}
+        {
+            'currentuser': user,
+            'tweets': tweets,
+            'notifications': notifications,
+        }
     )
 
 

@@ -1,7 +1,8 @@
 {% extends './index.html' %}
 {% block content %}
 {% if unread.count == 0 %}
-<h4>You're all caught up!</h4>
+<h4>No new notifications. You're all caught up!</h4>
+<hr>
 {% else %}
 <h4>New Notifications:</h4>
 {% for notification in unread %}
@@ -23,19 +24,20 @@
 </div>
 {% endfor %}
 {% endif %}
+{% comment %}
 <h4>All Notifications:</h4>
 {% for notification in read %}
 <div classname='notification' style='border: 1px solid black; padding: 0 10px 10px 10px; margin: 10px'>
     {% if notification.typeof == 'mention' %}
-    <h4><a href='/users/{{ notification.sender.username }}'>@{{ notification.sender }}</a> mentioned you in a tweet:</h4>
+    <h4>
+        <a href='/users/{{ notification.sender.username }}'>
+            @{{ notification.sender }}
+        </a> mentioned you in a <a href='/tweet/{{notification.reference.id}}/'>tweet</a>:
+    </h4>
     <p>{{ notification.reference.created_at }}</p>
     <h2>{{ notification.reference.text }}</h2>
-    {% if user not in notification.reference.likes.all %}
-    <a href='/tweet/like/{{ notification.reference.id }}/'><button>Like! {{ notification.reference.likes.count }}</button></a>
-    {% else %}
-    <a href='/tweet/unlike/{{ notification.reference.id }}/'><button>Unlike! {{ notification.reference.likes.count }}</button></a>
-    {% endif %}
     {% endif %}
 </div>
 {% endfor %}
+{% endcomment %}
 {% endblock %}

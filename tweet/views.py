@@ -53,7 +53,14 @@ def tweet_view(request):
                     )
                     print(notice)
             return redirect('/')
-    return render(request, 'generic_form.html', {'form': form})
+    notifications = Notification.objects.filter(
+        recipient=request.user, read=False
+    ).count
+    return render(
+        request,
+        'generic_form.html',
+        {'form': form, 'notifications': notifications}
+    )
 
 
 @login_required
@@ -105,12 +112,18 @@ def tweet_detail_view(request, id):
                     print(notice)
         form = TweetForm({'text': f'@{tweet.author} '})
         return redirect(reverse('tweet', args=[tweet.id]))
+    notifications = Notification.objects.filter(
+        recipient=request.user, read=False
+    ).count
+    if tweet.replying_to:
+        return redirect(reverse('tweet', args=[tweet.replying_to.id]))
     return render(
         request,
         'tweet_details.html',
         {
             'tweet': tweet,
             'replies': replies,
-            'form': form
+            'form': form,
+            'notifications': notifications,
         }
     )
