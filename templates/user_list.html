@@ -1,0 +1,16 @@
+{% extends './index.html' %}
+{% block content %}
+<h1>View All Users:</h1>
+{% for tweeter in users %}
+<div classname='user-thumbnail' style='border: 1px solid black; margin: 10px; padding: 10px'>
+    <a href='/users/{{ tweeter.username }}/'><h3>@{{ tweeter.username }}</h3></a>
+    <p>Member since: {{ tweeter.created_at }}</p>
+    <p>Following {{ tweeter.following.count }} users</p>
+    {% if request.user in tweeter.following.all %}
+    <a href='/users/unfollow/{{tweeter.username}}/'><button>Unfollow</button></a>
+    {% else %}
+    <a href='/users/follow/{{tweeter.username}}/'><button>Follow</button></a>
+    {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

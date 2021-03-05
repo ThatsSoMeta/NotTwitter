@@ -5,4 +5,19 @@ from django.contrib.auth.models import AbstractUser
 
 
 class TwitterUser(AbstractUser):
-    following = models.ManyToManyField('self', symmetrical=False)
+    following = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        blank=True,
+        related_name='is_following'
+    )
+    followers = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        blank=True,
+        related_name='is_followed_by'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.username

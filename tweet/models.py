@@ -5,9 +5,11 @@ from twitteruser.models import TwitterUser
 
 
 class Tweet(models.Model):
-    author = models.ForeignKey(TwitterUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        TwitterUser, on_delete=models.CASCADE, related_name='author'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
-    text = models.CharField(max_length=280)
+    text = models.CharField(max_length=140)
     likes = models.ManyToManyField(
         TwitterUser, blank=True, related_name='likes'
     )

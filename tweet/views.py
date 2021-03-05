@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect, reverse, HttpResponseRedirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import Tweet
 from .forms import TweetForm
 from notification.models import Notification
@@ -9,13 +10,15 @@ import re
 # Create your views here.
 
 
+@login_required
 def homepage_view(request):
-    tweets = Tweet.objects.all().order_by('-id')
-    notifications = 0
-    if request.user:
-        notifications = Notification.objects.filter(
-            recipient=request.user, read=False
-        ).count
+    following = request.user.following.all()
+    tweets = Tweet.objects.filter(
+        Q(author__in=following) | Q(author=request.user)
+    ).order_by('-id')
+    notifications = Notification.objects.filter(
+        recipient=request.user, read=False
+    ).count
     return render(
         request,
         'homepage.html',
@@ -35,21 +38,20 @@ def tweet_view(request):
                 author=request.user,
                 text=text
             )
-            if '@' in text:
-                mentions = re.findall(r"@(\w+)", text)
-                print(mentions)
-                for username in mentions:
-                    user = TwitterUser.objects.filter(
-                        username__iexact=username
+            mentions = re.findall(r"@(\w+)", text)
+            print(mentions)
+            for username in mentions:
+                user = TwitterUser.objects.filter(
+                    username__iexact=username
+                )
+                if user:
+                    notice = Notification.objects.create(
+                        typeof=Notification.MENTION,
+                        sender=request.user,
+                        recipient=user.first(),
+                        reference=tweet
                     )
-                    if user:
-                        notice = Notification.objects.create(
-                            typeof=Notification.MENTION,
-                            sender=request.user,
-                            recipient=user.first(),
-                            reference=tweet
-                        )
-                        print(notice)
+                    print(notice)
             return redirect('/')
     return render(request, 'generic_form.html', {'form': form})
 
@@ -98,13 +100,11 @@ def tweet_detail_view(request, id):
                         typeof=Notification.MENTION,
                         sender=request.user,
                         recipient=user.first(),
-                        reference=tweet
+                        reference=new_tweet
                     )
                     print(notice)
         form = TweetForm({'text': f'@{tweet.author} '})
-        return HttpResponseRedirect(
-                    request.GET.get('next', reverse('homepage'))
-                )
+        return redirect(reverse('tweet', args=[tweet.id]))
     return render(
         request,
         'tweet_details.html',

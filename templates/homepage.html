@@ -3,32 +3,37 @@
 {% if tweets.count == 0 %}
 <h3>There are no tweets yet. Be the first!</h3>
 {% else %}
+<h3>Recent Tweets:</h3>
 {% for tweet in tweets %}
 {% if not tweet.replying_to %}
-<div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 20px; padding-top: 0'>
-    <h3><a href='/users/{{ tweet.author.username }}/'>{{ tweet.author }}</a> says:</h3>
-    <p>{{ tweet.created_at }}</p>
+<div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 0 20px'>
+    <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a> says:</h3>
     <a href='/tweet/{{tweet.id}}/'><h2>{{ tweet.text }}</h2></a>
+    <p>
     {% if user not in tweet.likes.all %}
     <a href='/tweet/like/{{ tweet.id }}/'><button>Like! {{ tweet.likes.count }}</button></a>
     {% else %}
     <a href='/tweet/unlike/{{ tweet.id }}/'><button>Unlike {{ tweet.likes.count }}</button></a>
     {% endif %}
     <a href='tweet/{{tweet.id}}/'><button>Reply ({{ tweet.replies.count }})</button></a>
+    <span>{{tweet.created_at }}</span>
+    </p>
 </div>
 {% for reply in tweet.replies.all %}
-<div classname="reply" style='border: 1px solid black; margin: 10px; margin-left: 30px; padding: 20px; padding-top: 0'>
-    <h3><a href='/users/{{ reply.author.username }}/'>{{ reply.author }}</a> says:</h3>
-    <p>{{ reply.created_at }}</p>
-    <a href='/tweet/{{tweet.id}}/'><h2>{{ reply.text }}</h2></a>
+<div classname="reply" style='border: 1px solid black; margin: 10px; margin-left: 50px; padding: 0 20px'>
+    <p><strong><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> replied:</strong></p>
+    <p>{{ reply.text }}</p>
+    <p>
     {% if user not in reply.likes.all %}
     <a href='/tweet/like/{{ reply.id }}/'><button>Like! {{ reply.likes.count }}</button></a>
     {% else %}
     <a href='/tweet/unlike/{{ reply.id }}/'><button>Unlike {{ reply.likes.count }}</button></a>
     {% endif %}
+    <span>{{reply.created_at}}</span>
+    </p>
 </div>
-
 {% endfor %}
+
 {% endif %}
 {% endfor %}
 {% endif %}

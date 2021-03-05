@@ -12,14 +12,14 @@
         <h3><a href='/users/{{ notification.reference.author.username }}/'>@{{ notification.reference.author.username }}</a></h3>
         <h2>{{ notification.reference.text }}</h2>
         <p>{{ notification.reference.created_at }}</p>
-        {% if user not in tweet.likes.all %}
+        {% if user not in notification.reference.likes.all %}
         <a href='/tweet/like/{{ notification.reference.id }}/'><button>Like! {{ notification.reference.likes.count }}</button></a>
         {% else %}
         <a href='/tweet/unlike/{{ notification.reference.id }}/'><button>Unlike! {{ notification.reference.likes.count }}</button></a>
         {% endif %}
     </div>
     {% endif %}
-    <a href='/notifications/read/{{ notification.id }}/'><button>Mark as Read</button></a>
+    {% comment %} <a href='/notifications/read/{{ notification.id }}/'><button>Mark as Read</button></a> {% endcomment %}
 </div>
 {% endfor %}
 {% endif %}
@@ -30,7 +30,7 @@
     <h4><a href='/users/{{ notification.sender.username }}'>@{{ notification.sender }}</a> mentioned you in a tweet:</h4>
     <p>{{ notification.reference.created_at }}</p>
     <h2>{{ notification.reference.text }}</h2>
-    {% if user not in tweet.likes.all %}
+    {% if user not in notification.reference.likes.all %}
     <a href='/tweet/like/{{ notification.reference.id }}/'><button>Like! {{ notification.reference.likes.count }}</button></a>
     {% else %}
     <a href='/tweet/unlike/{{ notification.reference.id }}/'><button>Unlike! {{ notification.reference.likes.count }}</button></a>

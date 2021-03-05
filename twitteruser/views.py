@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import TwitterUser
 from tweet.models import Tweet
 
@@ -9,11 +10,10 @@ from tweet.models import Tweet
 def user_detail_view(request, username):
     user = TwitterUser.objects.get(username=username)
     tweets = Tweet.objects.filter(author=user).order_by('-id')
-    followers = TwitterUser.objects.filter(following=user)
     return render(
         request,
         'user_detail.html',
-        {'currentuser': user, 'tweets': tweets, 'followers': followers}
+        {'currentuser': user, 'tweets': tweets}
     )
 
 
@@ -23,6 +23,8 @@ def follow_user(request, username):
     user = TwitterUser.objects.get(username=username)
     currentuser.following.add(user)
     currentuser.save()
+    user.followers.add(currentuser)
+    user.save()
     return redirect(f'/users/{user.username}')
 
 
@@ -32,4 +34,18 @@ def unfollow_user(request, username):
     user = TwitterUser.objects.get(username=username)
     currentuser.following.remove(user)
     currentuser.save()
+    user.followers.remove(currentuser)
+    user.save()
     return redirect(f'/users/{user.username}')
+
+
+@login_required
+def view_all_users(request):
+    users = TwitterUser.objects.filter(
+        ~Q(username=request.user.username)
+    )
+    return render(
+        request,
+        'user_list.html',
+        {'users': users}
+    )

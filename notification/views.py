@@ -7,8 +7,15 @@ from .models import Notification
 
 @login_required
 def notification_view(request):
-    read = Notification.objects.filter(recipient=request.user, read=True).order_by('-id')
-    unread = Notification.objects.filter(recipient=request.user, read=False).order_by('-id')
+    read = Notification.objects.filter(
+        recipient=request.user, read=True
+    ).order_by('-id')
+    unread = Notification.objects.filter(
+        recipient=request.user, read=False
+    ).order_by('-id')
+    for note in unread:
+        note.read = True
+        note.save()
     return render(
         request,
         'notifications.html',

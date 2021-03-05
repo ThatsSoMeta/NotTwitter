@@ -16,7 +16,7 @@
 {{ form.as_p }}
 <input type="submit" value="Reply"/>
 </form>
-{% for reply in replies %}
+{% for reply in tweet.replies.all %}
 <div classname="reply" style='border: 1px solid black; margin: 10px; margin-left: 30px; padding: 20px; padding-top: 0'>
     <h3><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> says:</h3>
     <p>{{ reply.created_at }}</p>
