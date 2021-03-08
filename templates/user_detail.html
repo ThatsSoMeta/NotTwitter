@@ -3,62 +3,88 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/profile.css' %}" type="text/css" />
 <div class='profile-body'>
-<h1>@{{ currentuser.username }}'s Profile:</h1>
-<div class='profile-photo-container'>
-{% if currentuser.photo_url %}
-<img class='profile-photo' src={{ currentuser.photo_url }} alt={{ currentuser.username}} />
-{% else %}
-<img class='profile-photo' src="{% static 'img/anonymous_user.png' %}" alt='No Photo' />
-{% endif %}
-</div>
-{% if currentuser == request.user %}
-<button id='edit-photo' >Edit Photo</button>
-{% endif %}
-<h4>{{ currentuser.followers.count }} followers - {{ currentuser.following.count }} following</h4>
-{% if not user.is_authenticated %}
-<p><a href='/accounts/login/'>Log in</a> to follow this user and more!</p>
-{% elif currentuser == user %}
-<p>This is you.</p>
-{% elif currentuser in user.following.all %}
-<a href='/users/unfollow/{{currentuser.username}}/'><button>Unfollow</button></a>
-{% else %}
-<a href='/users/follow/{{currentuser.username}}/'><button>Follow User</button></a>
-{% endif %}
-{% if tweets.count == 0 %}
-<h3>This user has no tweets.</h3>
-{% elif user.is_authenticated %}
-<h3>{{ tweets.count }} tweets:</h3>
-{% for tweet in tweets %}
-{% if not tweet.replying_to %}
-<div class="tweet">
-    <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a></h3>
-    <a href='/tweet/{{tweet.id}}/'><h2>{{ tweet.text }}</h2></a>
-    <p>
-    {% if user not in tweet.likes.all %}
-    <a href='/tweet/like/{{ tweet.id }}/'><button>Like! {{ tweet.likes.count }}</button></a>
-    {% else %}
-    <a href='/tweet/unlike/{{ tweet.id }}/'><button>Unlike! {{ tweet.likes.count }}</button></a>
-    {% endif %}
-        <a href='tweet/{{tweet.id}}/'><button>Reply {{ tweet.replies.count }}</button></a>
-    <span>{{ tweet.created_at }}</span>
-    </p>
-</div>
-{% for reply in tweet.replies.all %}
-<div class="reply">
-    <p><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> replied:</p>
-    <p>{{ reply.text }}</p>
-    <p>
-        {% if user not in reply.likes.all %}
-        <a href='/tweet/like/{{ reply.id }}/'><button>Like! {{ reply.likes.count }}</button></a>
+    <h1>@{{ currentuser.username }}'s Profile:</h1>
+    <div class='profile-photo-container'>
+        {% if currentuser.photo_url %}
+        <img class='profile-photo' src={{ currentuser.photo_url }} alt={{ currentuser.username}} />
         {% else %}
-        <a href='/tweet/unlike/{{ reply.id }}/'><button>Unlike {{ reply.likes.count }}</button></a>
+        <img class='profile-photo' src="{% static 'img/anonymous_user.png' %}" alt='No Photo' />
         {% endif %}
-        <span>{{ reply.created_at }}</span>
-    </p>
-</div>
-{% endfor %}
-{% endif %}
-{% endfor %}
-{% endif %}
+    </div>
+    {% if currentuser == request.user %}
+    <form method="post" action=''>
+        {% csrf_token %}
+        <input type='text' class='text-input' name='url' placeholder='Enter URL here'/>
+        <input type='submit' class='button' value='Update Photo' />
+    </form>
+    {% endif %}
+    <h4>{{ currentuser.followers.count }} followers - {{ currentuser.following.count }} following</h4>
+    {% if not user.is_authenticated %}
+    <p><a href='/accounts/login/'>Log in</a> to follow this user and more!</p>
+    {% elif currentuser == user %}
+    <p>This is you.</p>
+    {% elif currentuser in user.following.all %}
+    <a href='/users/unfollow/{{currentuser.username}}/'><button>Unfollow</button></a>
+    {% else %}
+    <a href='/users/follow/{{currentuser.username}}/'><button>Follow User</button></a>
+    {% endif %}
+    {% if tweets.count == 0 %}
+    <h3>This user has no tweets.</h3>
+    {% elif user.is_authenticated %}
+    <div class='feed'>
+        <h3>{{ tweets.count }} tweets:</h3>
+        {% for tweet in tweets %}
+        {% if not tweet.replying_to %}
+        <div class="tweet">
+            <div class='tweet-header'>
+                <div class='tweet-author-info'>
+                    <div class='tweet-thumb-container'>
+                        <img class='tweet-thumb' src={{ tweet.author.photo_url }} alt={{ tweet.author }} />
+                    </div>
+                    <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a> says:</h3>
+                </div>
+                <div class='tweet-creation'>{{ tweet.created_at }}</div>
+            </div>
+            <div class='tweet-body'>
+                <a href='/tweet/{{tweet.id}}/'>{{ tweet.text }}</a>
+            </div>
+            <div class='tweet-footer'>
+            {% if user not in tweet.likes.all %}
+            <a href='/tweet/like/{{ tweet.id }}/'><button class='like-button'>Like! {{ tweet.likes.count }}</button></a>
+            {% else %}
+            <a href='/tweet/unlike/{{ tweet.id }}/'><button class='unlike-button'>Unlike {{ tweet.likes.count }}</button></a>
+            {% endif %}
+            <a href='tweet/{{tweet.id}}/'><button>Reply {{ tweet.replies.count }}</button></a>
+            </div>
+        </div>
+        {% for reply in tweet.replies.all %}
+        <div class="reply">
+            <div class='reply-header'>
+                <div class='reply-author-info'>
+                    <div class='reply-thumb-container'>
+                        <img class='reply-thumb' src={{ reply.author.photo_url }} alt={{ reply.author }} />
+                    </div>
+                    <p><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> replied:</p>
+                </div>
+                <div class='reply-creation'>{{ reply.created_at }}</div>
+            </div>
+            <div class='reply-body'>
+                <a href='/tweet/{{ reply.reference.id }}/' class='reply-body'>
+                    {{ reply.text }}
+                </a>
+            </div>
+            <div class='reply-footer'>
+            {% if user not in reply.likes.all %}
+            <a href='/tweet/like/{{ reply.id }}/'><button class='like-button'>Like! {{ reply.likes.count }}</button></a>
+            {% else %}
+            <a href='/tweet/unlike/{{ reply.id }}/'><button class='unlike-button'>Unlike {{ reply.likes.count }}</button></a>
+            {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

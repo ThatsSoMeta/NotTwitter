@@ -5,11 +5,16 @@ from .models import TwitterUser
 from notification.models import Notification
 from tweet.models import Tweet
 
-# Create your views here.
-
 
 def user_detail_view(request, username):
     user = TwitterUser.objects.get(username=username)
+    if request.method == 'POST':
+        print(request.POST['url'])
+        if user == request.user:
+            print('This is the right user')
+            user.photo_url = request.POST['url']
+            user.save()
+            return redirect(f'/users/{ user.username }')
     tweets = Tweet.objects.filter(author=user).order_by('-id')
     if request.user.is_authenticated:
         notifications = Notification.objects.filter(

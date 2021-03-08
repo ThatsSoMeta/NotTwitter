@@ -17,7 +17,13 @@
     {% if not tweet.replying_to %}
     <div class="tweet">
         <div class='tweet-header'>
-            <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a> says:</h3>
+            <div class='tweet-author-info'>
+                <div class='tweet-thumb-container'>
+                    <img class='tweet-thumb' src={{ tweet.author.photo_url }} alt={{ tweet.author }} />
+                </div>
+                <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a> says:</h3>
+            </div>
+            <div class='tweet-creation'>{{ tweet.created_at }}</div>
         </div>
         <div class='tweet-body'>
             <a href='/tweet/{{tweet.id}}/'>{{ tweet.text }}</a>
@@ -29,15 +35,18 @@
         <a href='/tweet/unlike/{{ tweet.id }}/'><button class='unlike-button'>Unlike {{ tweet.likes.count }}</button></a>
         {% endif %}
         <a href='tweet/{{tweet.id}}/'><button>Reply {{ tweet.replies.count }}</button></a>
-        <span>{{tweet.created_at }}</span>
         </div>
     </div>
     {% for reply in tweet.replies.all %}
     <div class="reply">
         <div class='reply-header'>
-            <a href='/users/{{ reply.author.username }}/'>
-            @{{ reply.author }}
-            </a> replied:
+            <div class='reply-author-info'>
+                <div class='reply-thumb-container'>
+                    <img class='reply-thumb' src={{ reply.author.photo_url }} alt={{ reply.author }} />
+                </div>
+                <p><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> replied:</p>
+            </div>
+            <div class='reply-creation'>{{ reply.created_at }}</div>
         </div>
         <div class='reply-body'>
             <a href='/tweet/{{ reply.reference.id }}/' class='reply-body'>
@@ -50,7 +59,6 @@
         {% else %}
         <a href='/tweet/unlike/{{ reply.id }}/'><button class='unlike-button'>Unlike {{ reply.likes.count }}</button></a>
         {% endif %}
-        <span>{{reply.created_at}}</span>
         </div>
     </div>
     {% endfor %}
