@@ -1,37 +1,49 @@
 {% extends './index.html' %}
 {% block content %}
-<div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 20px; padding-top: 0'>
-    <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a> says:</h3>
-    <p>{{ tweet.created_at }}</p>
-    <h2>{{ tweet.text }}</h2>
+<h3>Tweet Detail:</h3>
+<div class='feed'>
+    <div class="tweet" style='border: 1px solid black; margin: 10px; padding: 0 20px'>
+        <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a> says:</h3>
+        <h2>{{ tweet.text }}</h2>
+        {% if user.is_authenticated %}
+        {% if user not in tweet.likes.all %}
+        <p>
+            <a href='/tweet/like/{{ tweet.id }}/'><button class='like-button'>Like! {{ tweet.likes.count }}</button></a>
+            <span>{{ tweet.created_at }}</span>
+        </p>
+        {% else %}
+        <p>
+            <a href='/tweet/unlike/{{ tweet.id }}/'><button class='unlike-button'>Unlike {{ tweet.likes.count }}</button></a>
+            <span>{{ tweet.created_at }}</span>
+        </p>
+        {% endif %}
+        {% endif %}
+    </div>
     {% if user.is_authenticated %}
-    {% if user not in tweet.likes.all %}
-    <a href='/tweet/like/{{ tweet.id }}/'><button>Like! {{ tweet.likes.count }}</button></a>
-    {% else %}
-    <a href='/tweet/unlike/{{ tweet.id }}/'><button>Unlike {{ tweet.likes.count }}</button></a>
+    <form class='reply-form' method="post" action="">
+    {% csrf_token %}
+    {{form.text}}
+    <input class='reply-button button' type="submit" value="Reply"/>
+    </form>
     {% endif %}
-    {% endif %}
-</div>
-{% if user.is_authenticated %}
-<p>Reply:</p>
-<form method="post" action="">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Reply"/>
-</form>
-{% endif %}
-{% for reply in tweet.replies.all %}
-<div classname="reply" style='border: 1px solid black; margin: 10px; margin-left: 50px; padding: 20px; padding-top: 0'>
-    <h3><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> says:</h3>
-    <p>{{ reply.created_at }}</p>
-    <h2>{{ reply.text }}</h2>
-    {% if user.is_authenticated %}
-    {% if user not in reply.likes.all %}
-    <a href='/tweet/like/{{ reply.id }}/'><button>Like! {{ reply.likes.count }}</button></a>
-    {% else %}
-    <a href='/tweet/unlike/{{ reply.id }}/'><button>Unlike {{ reply.likes.count }}</button></a>
-    {% endif %}
-    {% endif %}
-</div>
+    {% for reply in tweet.replies.all %}
+    <div class="reply">
+        <p><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> replied:</p>
+        <h2>{{ reply.text }}</h2>
+        {% if user.is_authenticated %}
+        {% if user not in reply.likes.all %}
+        <p>
+            <a href='/tweet/like/{{ reply.id }}/'><button>Like! {{ reply.likes.count }}</button></a>
+            <span>{{reply.created_at}}</span>
+        </p>
+        {% else %}
+        <p>
+            <a href='/tweet/unlike/{{ reply.id }}/'><button>Unlike {{ reply.likes.count }}</button></a>
+            <span>{{reply.created_at}}</span>
+        </p>
+        {% endif %}
+        {% endif %}
+    </div>
 {% endfor %}
+</div>
 {% endblock %}

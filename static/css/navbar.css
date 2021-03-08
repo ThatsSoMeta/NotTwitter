@@ -1,0 +1,62 @@
+.header {
+    position: sticky;
+    top: 0;
+    background-color: inherit;
+    box-shadow: 0 5px 10px lightcyan;
+    margin-bottom: 20px;
+}
+
+.banner {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.banner-user {
+    display: flex;
+    align-items: center;
+}
+
+.banner-user-photo {
+    width: 4rem;
+    height: 4rem;
+    border: 5px solid darkcyan;
+    border-radius: 50%;
+    /* background-color: darkcyan; */
+    margin: 5px;
+}
+
+.banner-user-photo >img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.banner-user-info {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.welcome,
+.banner-logout,
+.banner-login {
+    font-weight: lighter;
+    flex-grow: 1;
+    margin: 0 5px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background-color: darkcyan;
+    color: lightcyan;
+    align-items: stretch;
+}
+
+.nav-button {
+    margin: 0;
+    padding: 15px;
+    flex-basis: 20%;
+}

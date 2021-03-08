@@ -1,0 +1,176 @@
+body {
+    background-color: black;
+    color: white;
+    margin: 0;
+}
+
+button,
+.button {
+    margin: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    color: darkcyan;
+    border: 2px solid darkcyan;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+a:hover {
+    color: cyan;
+    font-weight: bold;
+}
+
+::-webkit-input-placeholder {
+    color: lightcyan;
+}
+
+:-ms-input-placeholder {
+    color: lightcyan;
+}
+
+::placeholder {
+    color: lightcyan;
+}
+
+.feed {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 800px;
+}
+
+#log-in-to-tweet {
+    align-self: center;
+}
+
+textarea {
+    margin: 5px;
+}
+
+.tweet, .reply {
+    background-color: lightcyan;
+    color: darkcyan;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.tweet {
+    position: sticky;
+    top: 200px;
+}
+
+.reply {
+    align-self: flex-end;
+    width: 90%;
+}
+
+.tweet >div,
+.reply >div {
+    padding: 10px;
+}
+
+.tweet-header,
+.reply-header {
+    background-color: darkcyan;
+    color: lightcyan;
+    border-radius: 5px 5px 0 0;
+    font-weight: bold;
+}
+
+.tweet-body,
+.reply-body {
+    margin: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.tweet-body {
+    font-size: 2rem;
+}
+
+.tweet-footer,
+.reply-footer {
+    margin: 0 10px;
+}
+
+.unlike-button {
+    background-color: darkcyan;
+    color: lightcyan;
+}
+
+.reply-form {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.tweet-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    align-content: stretch;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tweet-form >textarea {
+    background-color: white;
+    color: darkcyan;
+}
+
+.tweet-form >textarea::placeholder {
+    color: darkcyan;
+}
+
+#tweet-button {
+    background-color: darkcyan;
+    color: lightcyan;
+    border: none;
+    margin: 10px auto;
+    padding: 10px;
+    width: 90%;
+    max-width: 600px;
+}
+
+.reply-form {
+    align-self: flex-end;
+    align-items: center;
+}
+
+.reply-text {
+    border-radius: 5px;
+    padding: 10px;
+    height: 4rem;
+    outline: none;
+    background-color: darkcyan;
+    color: lightcyan;
+    font-weight: bold;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.reply-button {
+    padding: 10px;
+    border: none;
+    background-color: darkcyan;
+    color: lightcyan;
+}
+
+.profile-body {
+    margin: 20px;
+}

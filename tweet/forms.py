@@ -12,5 +12,11 @@ class TweetForm(forms.ModelForm):
             'text': 'Tweet'
         }
         widgets = {
-            'text': forms.Textarea(attrs={'cols': 100, 'rows': 4})
+            'text': forms.Textarea(
+                attrs={
+                    'autofocus': 'on',
+                    'class': 'reply-text',
+                    'placeholder': "What's on your mind?"
+                }
+            )
         }

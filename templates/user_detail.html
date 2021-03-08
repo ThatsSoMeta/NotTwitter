@@ -1,8 +1,23 @@
 {% extends './index.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}" type="text/css" />
+<div class='profile-body'>
 <h1>@{{ currentuser.username }}'s Profile:</h1>
+<div class='profile-photo-container'>
+{% if currentuser.photo_url %}
+<img class='profile-photo' src={{ currentuser.photo_url }} alt={{ currentuser.username}} />
+{% else %}
+<img class='profile-photo' src="{% static 'img/anonymous_user.png' %}" alt='No Photo' />
+{% endif %}
+</div>
+{% if currentuser == request.user %}
+<button id='edit-photo' >Edit Photo</button>
+{% endif %}
 <h4>{{ currentuser.followers.count }} followers - {{ currentuser.following.count }} following</h4>
-{% if currentuser == user %}
+{% if not user.is_authenticated %}
+<p><a href='/accounts/login/'>Log in</a> to follow this user and more!</p>
+{% elif currentuser == user %}
 <p>This is you.</p>
 {% elif currentuser in user.following.all %}
 <a href='/users/unfollow/{{currentuser.username}}/'><button>Unfollow</button></a>
@@ -11,11 +26,11 @@
 {% endif %}
 {% if tweets.count == 0 %}
 <h3>This user has no tweets.</h3>
-{% else %}
+{% elif user.is_authenticated %}
 <h3>{{ tweets.count }} tweets:</h3>
 {% for tweet in tweets %}
 {% if not tweet.replying_to %}
-<div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 0 20px'>
+<div class="tweet">
     <h3><a href='/users/{{ tweet.author.username }}/'>@{{ tweet.author }}</a></h3>
     <a href='/tweet/{{tweet.id}}/'><h2>{{ tweet.text }}</h2></a>
     <p>
@@ -29,8 +44,8 @@
     </p>
 </div>
 {% for reply in tweet.replies.all %}
-<div classname="reply" style='border: 1px solid black; margin: 10px; margin-left: 50px; padding: 0 20px'>
-    <p><strong><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> replied:</strong></p>
+<div class="reply">
+    <p><a href='/users/{{ reply.author.username }}/'>@{{ reply.author }}</a> replied:</p>
     <p>{{ reply.text }}</p>
     <p>
         {% if user not in reply.likes.all %}
@@ -45,4 +60,5 @@
 {% endif %}
 {% endfor %}
 {% endif %}
+</div>
 {% endblock %}

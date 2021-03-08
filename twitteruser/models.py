@@ -18,6 +18,7 @@ class TwitterUser(AbstractUser):
         related_name='is_followed_by'
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    photo_url = models.URLField(blank=True)
 
     def __str__(self):
         return self.username

@@ -11,9 +11,12 @@ from tweet.models import Tweet
 def user_detail_view(request, username):
     user = TwitterUser.objects.get(username=username)
     tweets = Tweet.objects.filter(author=user).order_by('-id')
-    notifications = Notification.objects.filter(
-        recipient=request.user, read=False
-    ).count
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(
+            recipient=request.user, read=False
+        ).count
+    else:
+        notifications = 0
     return render(
         request,
         'user_detail.html',
