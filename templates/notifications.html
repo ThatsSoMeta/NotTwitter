@@ -1,31 +1,47 @@
 {% extends './index.html' %}
+{% load static %}
 {% block content %}
-{% if unread.count == 0 %}
-<h4>No new notifications. You're all caught up!</h4>
-<hr>
-{% else %}
-<h4>New Notifications:</h4>
-{% for notification in unread %}
-<div classname='notification' style='border: 1px solid black; padding: 0 10px 10px 10px; margin: 10px'>
-    {% if notification.typeof == 'mention' %}
-    <h4><a href='/users/{{ notification.sender.username }}'>@{{ notification.sender }}</a> mentioned you in a tweet:</h4>
-    <div classname="tweet" style='border: 1px solid black; margin: 10px; padding: 5px'>
-        <h3><a href='/users/{{ notification.reference.author.username }}/'>@{{ notification.reference.author.username }}</a></h3>
-        <h2>{{ notification.reference.text }}</h2>
-        <p>{{ notification.reference.created_at }}</p>
-        {% if user not in notification.reference.likes.all %}
-        <a href='/tweet/like/{{ notification.reference.id }}/'><button>Like! {{ notification.reference.likes.count }}</button></a>
-        {% else %}
-        <a href='/tweet/unlike/{{ notification.reference.id }}/'><button>Unlike! {{ notification.reference.likes.count }}</button></a>
-        {% endif %}
+<link rel="stylesheet" href="{% static 'css/notification.css' %}" type="text/css" />
+<div class='feed'>
+    {% if unread.count == 0 %}
+    <div class='new-notification-header'>
+        <h4>No new notifications. You're all caught up!</h4>
     </div>
-    {% endif %}
-    {% comment %} <a href='/notifications/read/{{ notification.id }}/'><button>Mark as Read</button></a> {% endcomment %}
-</div>
-{% endfor %}
+    {% else %}
+    <div class='new-notification-header'>
+        <h4>New Notifications:</h4>
+    </div>
+    {% for notification in unread %}
+    <div class='notification'>
+        {% if notification.typeof == 'mention' %}
+        <div class='tweet'>
+            <div class='tweet-header'>
+                {% if request.user == notification.sender %}
+                You mentioned yourself in a tweet:
+                {% else %}
+                <a href='/users/{{ notification.sender.username }}'>@{{ notification.sender }}</a> mentioned you in a tweet:
+                {% endif %}
+            </div>
+            <div class="tweet-body">
+                <a href='/tweet/{{notification.reference.id}}/'>{{ notification.reference.text }}</a>
+                <div class='tweet-footer'>
+                    <span>{{ notification.reference.created_at }}</span>
+                    {% if user not in notification.reference.likes.all %}
+                    <a href='/tweet/like/{{ notification.reference.id }}/'><button>Like! {{ notification.reference.likes.count }}</button></a>
+                    {% else %}
+                    <a href='/tweet/unlike/{{ notification.reference.id }}/'><button>Unlike! {{ notification.reference.likes.count }}</button></a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <a href='/notifications/read/{{ notification.id }}/'><button>Mark as Read</button></a>
+    </div>
+    {% endfor %}
 {% endif %}
-{% comment %}
-<h4>All Notifications:</h4>
+<div class='new-notification-header'>
+    <h4>All Notifications:</h4>
+</div>
 {% for notification in read %}
 <div classname='notification' style='border: 1px solid black; padding: 0 10px 10px 10px; margin: 10px'>
     {% if notification.typeof == 'mention' %}
@@ -34,10 +50,10 @@
             @{{ notification.sender }}
         </a> mentioned you in a <a href='/tweet/{{notification.reference.id}}/'>tweet</a>:
     </h4>
-    <p>{{ notification.reference.created_at }}</p>
     <h2>{{ notification.reference.text }}</h2>
+    <p>{{ notification.reference.created_at }}</p>
     {% endif %}
 </div>
 {% endfor %}
-{% endcomment %}
+</div>
 {% endblock %}

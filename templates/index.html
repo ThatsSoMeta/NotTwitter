@@ -1,18 +1,62 @@
-{% if user.is_authenticated %}
-<h2>Hello, {{ user.username }}!</h2>
-{% if request.path != '/' %}
-<a href='/'><button>Back to Home</button></a>
-{% endif %}
-<a href='/users/{{user.username}}/'><button>View Profile</button></a>
-<a href='/tweet/'><button>New Tweet</button></a>
-<a href='/users/all/'><button>View Users</button></a>
-{% if 'notifications' not in request.path %}
-<a href='/notifications/'><button>Notifications: {{notifications}}</button></a>
-{% endif %}
-<a href='/accounts/logout'><button>Log Out</button></a>
-{% else %}
-<h1>Not Twitter.</h1>
-<a href='/accounts/login'><button>Log In</button></a>
-{% endif %}
-{% block content %}
-{% endblock %}
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" type="text/css" />
+</head>
+
+<body>
+    <div class='header'>
+    <div class='banner'>
+        <h1 class='app-header'>Not Twitter.</h1>
+        {% if user.is_authenticated %}
+        <div class='banner-user'>
+            <div class='banner-user-info'>
+                <h2 class='welcome'>Hello, {{ user.username }}!</h2>
+                <span class='banner-logout'>Not you? <a href='/accounts/logout/'>Log out.</a></span>
+            </div>
+            <div class='banner-user-photo' >
+                <img src='{{ request.user.photo_url }}' alt='{{request.user}}' />
+            </div>
+        </div>
+        {% else %}
+        <div class='banner-user'>
+            <div class='banner-user-info'>
+                <h2 class='welcome'>Hello, stranger</h2>
+                <span class='banner-login'><a href='/accounts/login/'>Log In.</a></span>
+            </div>
+            <div class='banner-user-photo'>
+                <img src="{% static 'img/anonymous_user.png' %}" alt='No Photo' />
+                {% comment %} https://www.iconfinder.com/icons/2428675/account_anonymous_app_contacts_open_line_profile_user_icon {% endcomment %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% if user.is_authenticated %}
+    <div class='navbar'>
+        {% if request.path != '/' %}
+        <a href='/'><div class='nav-button'>Back to Home</div class='nav-button'></a>
+        {% endif %}
+        <a href='/users/{{user.username}}/'><div class='nav-button'>View Profile</div class='nav-button'></a>
+        <a href='/users/all/'><div class='nav-button'>View Users</div class='nav-button'></a>
+        {% if 'notifications' not in request.path %}
+        <a href='/notifications/'><div class='nav-button'>Notifications: {{notifications}}</div class='nav-button'></a>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class='navbar'>
+        {% if request.path != '/' %}
+        <a href='/'><div class='nav-button'>Back to Home</div class='nav-button'></a>
+        {% endif %}
+        {% if request.path != '/accounts/login/' %}
+        <a href='/accouts/login/'><div class='nav-button'>Log in</div class='nav-button'></a>
+        {% endif %}
+        {% if request.path != '/accounts/register/' %}
+        <a href='/accouts/register/'><div class='nav-button'>Sign up for free!</div class='nav-button'></a>
+        {% endif %}
+        <a href='/users/all/'><div class='nav-button'>View Users</div class='nav-button'></a>
+    </div>
+    {% endif %}
+    </div>
+    {% block content %}
+    {% endblock %}
+</body>

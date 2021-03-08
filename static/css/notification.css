@@ -1,0 +1,23 @@
+.notification {
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 0 10px greenyellow;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.new-notification-header {
+    align-self: center;
+}
+
+.notification >.tweet {
+    width: 90%;
+}
+
+.tweet-body {
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}

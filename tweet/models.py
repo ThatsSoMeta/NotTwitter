@@ -9,7 +9,9 @@ class Tweet(models.Model):
         TwitterUser, on_delete=models.CASCADE, related_name='author'
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    text = models.CharField(max_length=140)
+    text = models.CharField(
+        max_length=140,
+    )
     likes = models.ManyToManyField(
         TwitterUser, blank=True, related_name='likes'
     )

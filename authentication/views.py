@@ -18,7 +18,7 @@ def register_view(request):
             login(request, user)
             return redirect('/')
     return render(
-        request, 'auth/generic_form.html', {'form': form, 'header': "Register"}
+        request, 'register.html', {'form': form, 'header': "Register"}
     )
 
 
@@ -39,7 +39,7 @@ def login_view(request):
                 )
     return render(
         request,
-        'auth/generic_form.html',
+        'generic_form.html',
         {
             'form': form,
             'header': 'Login'
@@ -49,4 +49,4 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/accounts/login/')
+    return redirect('/')

@@ -1,7 +1,12 @@
-<h1>Penny for your thoughts?</h1>
-<a href='/'><button>< Back to Home</button></a>
+{% extends './index.html' %}
+{% block content %}
 <form method="post" action=''>
+<h1>{{ header }}</h1>
 {% csrf_token %}
 {{ form.as_p }}
-<input type='submit' value='Tweet'/>
+<input type='submit' class='button' value='{{header}}'/>
+{% if 'login' in request.path %}
+<p>New User? <a href='/accounts/register'>Create an account</a>!</p>
+{% endif %}
 </form>
+{% endblock %}

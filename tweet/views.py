@@ -10,19 +10,49 @@ import re
 # Create your views here.
 
 
-@login_required
+# @login_required
 def homepage_view(request):
-    following = request.user.following.all()
-    tweets = Tweet.objects.filter(
-        Q(author__in=following) | Q(author=request.user)
-    ).order_by('-created_at')
-    notifications = Notification.objects.filter(
-        recipient=request.user, read=False
-    ).count
+    form = TweetForm()
+    if request.user.is_authenticated:
+        following = request.user.following.all()
+        tweets = Tweet.objects.filter(
+            Q(author__in=following) | Q(author=request.user)
+        ).order_by('-created_at')
+        notifications = Notification.objects.filter(
+            recipient=request.user, read=False
+        ).count
+    else:
+        notifications = 0
+        tweets = Tweet.objects.all().order_by('-created_at')
+    if request.method == 'POST':
+        form = TweetForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            text = data['text']
+            tweet = Tweet.objects.create(
+                author=request.user,
+                text=text
+            )
+            mentions = re.findall(r"@(\w+)", text)
+            print(mentions)
+            for username in mentions:
+                user = TwitterUser.objects.filter(
+                    username__iexact=username
+                )
+                if user:
+                    notice = Notification.objects.create(
+                        typeof=Notification.MENTION,
+                        sender=request.user,
+                        recipient=user.first(),
+                        reference=tweet
+                    )
+                    print(notice)
+            return redirect('/')
+
     return render(
         request,
         'homepage.html',
-        {'tweets': tweets, 'notifications': notifications}
+        {'tweets': tweets, 'notifications': notifications, 'form': form}
     )
 
 
