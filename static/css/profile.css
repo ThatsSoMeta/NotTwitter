@@ -6,7 +6,8 @@
 
 .profile-photo-container {
     background-image: linear-gradient(45deg, darkcyan, lightcyan, darkcyan);
-    width: 25%;
+    width: 20%;
+    max-width: 400px;
     padding: 10px;
     border-radius: 50%;
     margin: 20px;
